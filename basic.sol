@@ -2,43 +2,12 @@
  *Submitted for verification at Etherscan.io on 2017-07-06
 */
 
-pragma solidity ^0.4.8;
+//pragma solidity >=0.5.0 <0.6.0;
 
 /**
  * Math operations with safety checks
  */
-contract SafeMath {
-  function safeMul(uint256 a, uint256 b) internal returns (uint256) {
-    uint256 c = a * b;
-    assert(a == 0 || c / a == b);
-    return c;
-  }
-
-  function safeDiv(uint256 a, uint256 b) internal returns (uint256) {
-    assert(b > 0);
-    uint256 c = a / b;
-    assert(a == b * c + a % b);
-    return c;
-  }
-
-  function safeSub(uint256 a, uint256 b) internal returns (uint256) {
-    assert(b <= a);
-    return a - b;
-  }
-
-  function safeAdd(uint256 a, uint256 b) internal returns (uint256) {
-    uint256 c = a + b;
-    assert(c>=a && c>=b);
-    return c;
-  }
-
-  function assert(bool assertion) internal {
-    if (!assertion) {
-      throw;
-    }
-  }
-}
-contract BNB is SafeMath{
+contract Casino is SafeMath{
     string public name;
     string public symbol;
     uint8 public decimals;
