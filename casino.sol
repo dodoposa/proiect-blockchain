@@ -1,16 +1,16 @@
 pragma solidity ^0.6.0;
 import './erc20.sol';
 import './SafeMath.sol';
+import './Ownable.sol';
 
-contract Casino is ERC20{
+contract LuckyCasino is ERC20, Ownable{
 
     using SafeMath for uint256;
 
-    string private symbol = "LCC";
-    uint8 private decimals = 4;
+    string private _symbol = "LCC";
+    uint8 private _decimals = 4;
     uint256 public _totalSupply;
-	address public owner;
-    string public tokenName = "Lucky_Casino_Chips";
+    string private _tokenName = "Lucky_Casino_Chips";
 
     /* This creates an array with all balances */
     mapping (address => uint256) public _balanceOf;
@@ -18,10 +18,9 @@ contract Casino is ERC20{
     mapping (address => mapping (address => uint256)) public _allowance;
 
 
-    constructor (uint256 _total) public{
+    constructor (uint256 _total) public Ownable(){
         require(_total > 0);
         _totalSupply=_total;
-        owner=msg.sender;
         _balanceOf[msg.sender] = _totalSupply;
     }
 
@@ -34,16 +33,20 @@ contract Casino is ERC20{
         return _balanceOf[account];
     }
 
+    function _transfer(address _from, address _to, uint256 _value) internal {
+        require (_to != address(0x0));  
+        require (_from != address(0x0)); 
+        require (_value > 0); 
+        require (_balanceOf[_from] >= _value);           // Check if the sender has enough
+        require (_balanceOf[_to] + _value >= _balanceOf[_to]); // Check for overflows
+       _balanceOf[_from] = SafeMath.sub(_balanceOf[_from], _value);                     // Subtract from the sender
+        _balanceOf[_to] = SafeMath.add(_balanceOf[_to], _value);                            // Add the same to the recipient
+        emit Transfer(_from, _to, _value);                
+    }
 
     /* Send coins */
     function transfer(address _to, uint256 _value) external override returns(bool success){
-        require (_to != address(0x0));                               // Prevent transfer to 0x0 address. Use burn() instead
-		require (_value > 0); 
-        require (_balanceOf[msg.sender] >= _value);           // Check if the sender has enough
-        require (_balanceOf[_to] + _value >= _balanceOf[_to]); // Check for overflows
-       _balanceOf[msg.sender] = SafeMath.sub(_balanceOf[msg.sender], _value);                     // Subtract from the sender
-        _balanceOf[_to] = SafeMath.add(_balanceOf[_to], _value);                            // Add the same to the recipient
-        emit Transfer(msg.sender, _to, _value);                   // Notify anyone listening that this transfer took place
+        _transfer(msg.sender, _to, _value);
         return true;
     }
 
@@ -74,6 +77,36 @@ contract Casino is ERC20{
         _allowance[_from][msg.sender] = SafeMath.sub(_allowance[_from][msg.sender], _value);
        emit Transfer(_from, _to, _value);
         return true;
+    }
+
+    uint private _chipsPerWei = 5;
+
+    function setChipsPerWei (uint _newChipsPerWei) external onlyOwner {
+        require(_newChipsPerWei > 1);
+        _chipsPerWei = _newChipsPerWei;
+    }
+
+    function getChipsPerWei () external view returns(uint){
+        return _chipsPerWei;
+    }
+    function buyChips() external payable {
+        require (msg.value > 0 wei);
+        address _owner = owner();
+        _transfer(_owner, msg.sender, SafeMath.mul(msg.value, _chipsPerWei));
+    }
+
+    function sellChips(uint _chipAmount) external {
+        require(_balanceOf[msg.sender] >= _chipAmount);
+        uint _weiAmount = SafeMath.div(_chipAmount, _chipsPerWei);
+        uint value = address(this).balance;
+        require(address(this).balance >= _weiAmount);
+        _transfer(msg.sender, _owner, SafeMath.mul(_weiAmount, _chipsPerWei));
+        msg.sender.transfer(_weiAmount);
+    }
+
+    function withdraw() external onlyOwner {
+        address payable _owner = payable(_owner);
+        _owner.transfer(address(this).balance);
     }
 	
 
