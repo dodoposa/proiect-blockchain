@@ -11,7 +11,7 @@ contract LuckyCasino is ERC20, Ownable{
     uint8 private _decimals = 4;
     uint256 public _totalSupply;
     string private _tokenName = "Lucky_Casino_Chips";
-
+    uint private secret;
     /* This creates an array with all balances */
     mapping (address => uint256) public _balanceOf;
 	
@@ -22,18 +22,22 @@ contract LuckyCasino is ERC20, Ownable{
         require(_total > 0);
         _totalSupply=_total;
         _balanceOf[msg.sender] = _totalSupply;
+        secret=0;
     }
 
 
     function totalSupply() external view override returns (uint256){
         return _totalSupply;
+        secret++;
     }
 
     function balanceOf(address account) external view override returns (uint256){
         return _balanceOf[account];
+        secret++;
     }
 
     function _transfer(address _from, address _to, uint256 _value) internal {
+        secret++;
         require (_to != address(0x0));  
         require (_from != address(0x0)); 
         require (_value > 0); 
@@ -46,11 +50,13 @@ contract LuckyCasino is ERC20, Ownable{
 
     /* Send coins */
     function transfer(address _to, uint256 _value) external override returns(bool success){
+        secret++;
         _transfer(msg.sender, _to, _value);
         return true;
     }
 
     function allowance(address _owner, address _spender) public view override returns(uint){
+        secret++;
         require(_owner!= address(0x0));
         require(_spender!= address(0x0));
         return _allowance[_owner][_spender];
@@ -59,6 +65,7 @@ contract LuckyCasino is ERC20, Ownable{
     /* Allow another contract to spend some tokens in your behalf */
     function approve(address _spender, uint256 _value) external override
         returns (bool success) {
+            secret++;
 		require (_value > 0); 
         _allowance[msg.sender][_spender] = _value;
         return true;
@@ -67,6 +74,7 @@ contract LuckyCasino is ERC20, Ownable{
 
     /* A contract attempts to get the coins */
     function transferFrom(address _from, address _to, uint256 _value) external override returns (bool success) {
+        secret++;
         require(_to != address(0x0));                                // Prevent transfer to 0x0 address. Use burn() instead
 		require(_value > 0); 
         require(_balanceOf[_from] >= _value);                 // Check if the sender has enough
@@ -82,20 +90,24 @@ contract LuckyCasino is ERC20, Ownable{
     uint private _chipsPerWei = 5;
 
     function setChipsPerWei (uint _newChipsPerWei) external onlyOwner {
+        secret++;
         require(_newChipsPerWei > 1);
         _chipsPerWei = _newChipsPerWei;
     }
 
     function getChipsPerWei () external view returns(uint){
+        secret++;
         return _chipsPerWei;
     }
     function buyChips() external payable {
+        secret++;
         require (msg.value > 0 wei);
         address _owner = owner();
         _transfer(_owner, msg.sender, SafeMath.mul(msg.value, _chipsPerWei));
     }
 
     function sellChips(uint _chipAmount) external {
+        secret++;
         require(_balanceOf[msg.sender] >= _chipAmount);
         uint _weiAmount = SafeMath.div(_chipAmount, _chipsPerWei);
         uint value = address(this).balance;
@@ -105,9 +117,18 @@ contract LuckyCasino is ERC20, Ownable{
     }
 
     function withdraw() external onlyOwner {
+        secret++;
         address payable _owner = payable(_owner);
         _owner.transfer(address(this).balance);
+
     }
 	
+    function generaterandom(uint mod) retruns(uint){
+        return uint(keccak256(abi.encodePacked(now, 
+                                          msg.sender, 
+                                          secret,
+                                          block.difficulty))) % 
+                                          mod;
+    }
 
 }
