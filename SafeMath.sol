@@ -1,14 +1,7 @@
-pragma solidity >=0.5.0 <0.6.0;
+pragma solidity ^0.6.0;
 
-/**
- * @title SafeMath
- * @dev Math operations with safety checks that throw on error
- */
 library SafeMath {
 
-  /**
-  * @dev Multiplies two numbers, throws on overflow.
-  */
   function mul(uint256 a, uint256 b) internal pure returns (uint256) {
     if (a == 0) {
       return 0;
