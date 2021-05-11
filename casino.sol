@@ -6,8 +6,8 @@ contract Casino is ERC20{
 
     using SafeMath for uint256;
 
-    string public symbol = "LCC";
-    uint8 public decimals = 4;
+    string private symbol = "LCC";
+    uint8 private decimals = 4;
     uint256 public _totalSupply;
 	address public owner;
     string public tokenName = "Lucky_Casino_Chips";
