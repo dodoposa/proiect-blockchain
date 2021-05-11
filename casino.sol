@@ -27,13 +27,15 @@ contract LuckyCasino is ERC20, Ownable{
 
 
     function totalSupply() external view override returns (uint256){
+        
         return _totalSupply;
-        secret++;
+        
     }
 
     function balanceOf(address account) external view override returns (uint256){
+           
         return _balanceOf[account];
-        secret++;
+     
     }
 
     function _transfer(address _from, address _to, uint256 _value) internal {
@@ -56,7 +58,7 @@ contract LuckyCasino is ERC20, Ownable{
     }
 
     function allowance(address _owner, address _spender) public view override returns(uint){
-        secret++;
+        
         require(_owner!= address(0x0));
         require(_spender!= address(0x0));
         return _allowance[_owner][_spender];
@@ -96,7 +98,7 @@ contract LuckyCasino is ERC20, Ownable{
     }
 
     function getChipsPerWei () external view returns(uint){
-        secret++;
+        
         return _chipsPerWei;
     }
     function buyChips() external payable {
@@ -123,7 +125,8 @@ contract LuckyCasino is ERC20, Ownable{
 
     }
 	
-    function generaterandom(uint mod) retruns(uint){
+    function generaterandom(uint mod) public returns(uint){
+        secret++;
         return uint(keccak256(abi.encodePacked(now, 
                                           msg.sender, 
                                           secret,
