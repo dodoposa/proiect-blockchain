@@ -42,7 +42,7 @@ contract LuckyCasino is ERC20, Ownable{
         secret++;
         require (_to != address(0x0));  
         require (_from != address(0x0)); 
-        require (_value > 0); 
+        require (_value >= 0); 
         require (_balanceOf[_from] >= _value);           // Check if the sender has enough
         require (_balanceOf[_to] + _value >= _balanceOf[_to]); // Check for overflows
        _balanceOf[_from] = SafeMath.sub(_balanceOf[_from], _value);                     // Subtract from the sender
@@ -125,7 +125,7 @@ contract LuckyCasino is ERC20, Ownable{
 
     }
 	
-    function generaterandom(uint mod) public returns(uint){
+    function generaterandom(uint mod) internal returns(uint){
         secret++;
         return uint(keccak256(abi.encodePacked(now, 
                                           msg.sender, 
@@ -136,7 +136,7 @@ contract LuckyCasino is ERC20, Ownable{
 // <498 Heads win
 // 498, 499, 500, 501, 502 lands on the side
 // >502 tails win
-    function play_coinflip(string memory choice, uint betAmount) external returns(uint){
+    function playCoinflip(string memory choice, uint betAmount) internal returns(uint){
 
         uint result = generaterandom(1001);
         if(result < 498){
@@ -162,6 +162,15 @@ contract LuckyCasino is ERC20, Ownable{
         }
 
         return 0;
+    }
+    
+    function playCoinflipWrapper(string memory choice, uint betAmount) external returns(uint){
+        require(_balanceOf[msg.sender] > betAmount);
+        // _balanceOf[msg.sender] = SafeMath.sub(_balanceOf[msg.sender],betAmount);
+        // _totalSupply = SafeMath.add(_totalSupply, betAmount);
+        _transfer(msg.sender,address(owner()),betAmount);
+        uint outcome = playCoinflip(choice, betAmount);
+        _transfer(address(owner()),msg.sender,outcome);
     }
 
 }
