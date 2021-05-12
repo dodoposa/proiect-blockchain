@@ -1,7 +1,5 @@
 pragma solidity ^0.6.0;
 
-import "https://github.com/dodoposa/proiect-blockchain/blob/main/erc20.sol";
-
 contract Lottery {
     address public manager;
     address payable[] public players;
