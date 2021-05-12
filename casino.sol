@@ -133,5 +133,35 @@ contract LuckyCasino is ERC20, Ownable{
                                           block.difficulty))) % 
                                           mod;
     }
+// <498 Heads win
+// 498, 499, 500, 501, 502 lands on the side
+// >502 tails win
+    function play_coinflip(string memory choice, uint betAmount) external returns(uint){
+
+        uint result = generaterandom(1001);
+        if(result < 498){
+            if(keccak256(abi.encodePacked((choice))) == keccak256(abi.encodePacked(("heads")))){
+                //win 2X
+                betAmount = SafeMath.mul(betAmount,2);
+                return betAmount;
+            }
+        }
+        if(result >= 498 && result <=502){
+            if(keccak256(abi.encodePacked((choice))) == keccak256(abi.encodePacked(("side")))){
+                //win 99X
+                betAmount = SafeMath.mul(betAmount,99);
+                return betAmount;
+            }
+        }
+        if(result >502){
+            if(keccak256(abi.encodePacked((choice))) == keccak256(abi.encodePacked(("tails")))){
+                //win 2X
+                betAmount = SafeMath.mul(betAmount,2);
+                return betAmount;
+            }
+        }
+
+        return 0;
+    }
 
 }
