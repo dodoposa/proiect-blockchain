@@ -164,7 +164,7 @@ contract LuckyCasino is ERC20, Ownable{
         return 0;
     }
     
-    function playCoinflipWrapper(string memory choice, uint betAmount) external returns(uint){
+    function playCoinflipWrapper(string calldata choice, uint betAmount) external returns(uint){
         require(_balanceOf[msg.sender] > betAmount);
         // _balanceOf[msg.sender] = SafeMath.sub(_balanceOf[msg.sender],betAmount);
         // _totalSupply = SafeMath.add(_totalSupply, betAmount);
@@ -172,5 +172,72 @@ contract LuckyCasino is ERC20, Ownable{
         uint outcome = playCoinflip(choice, betAmount);
         _transfer(address(owner()),msg.sender,outcome);
     }
-
+    
+    function playSlots() external returns(uint, string memory){
+        uint betAmount = 2;
+        require(_balanceOf[msg.sender] > betAmount);
+        _transfer(msg.sender,address(owner()),betAmount);
+        uint _win;
+        string memory _spinResult;
+        uint first = generaterandom(6) + 1;
+        uint second = generaterandom(6) + 1;
+        uint third = generaterandom(6) + 1;
+        (_win, _spinResult) = _spin(first, second, third);
+        _transfer(address(owner()),msg.sender,_win);
+        return (_win, _spinResult);
+    }
+    
+    function _getSymbols(uint wheel) internal pure returns ( string memory){
+        require( wheel >= 1);
+        require(wheel <= 6);
+        string memory firstSymbol = '';
+        if (wheel == 1) {
+            firstSymbol = 'CHERRY';
+        }
+        else if (wheel == 2) {
+            firstSymbol = 'LEMON';
+        }
+        else if (wheel == 3) {
+            firstSymbol = 'ORANGE';
+        }
+        else if (wheel == 4) {
+            firstSymbol = 'PLUM';
+        }
+        else if (wheel == 5) {
+            firstSymbol = 'BELL';
+        }
+        else if (wheel == 6) {
+            firstSymbol = 'BAR';
+        }
+        return firstSymbol;
+        
+    }
+    
+    function _spin(uint firstWheel, uint secondWheel, uint thirdWheel) internal pure returns (uint, string memory){
+        uint _win = 0;
+    
+        if(firstWheel == 1 && secondWheel == 1 && (thirdWheel == 3 || thirdWheel == 6))
+            _win = 7;
+        else if(firstWheel == 1 && secondWheel == 1)
+            _win = 5;
+        else if(firstWheel == 1)
+            _win = 2;
+        else if(firstWheel == 2 && secondWheel == 2 && (thirdWheel == 2 || thirdWheel == 6))
+            _win = 8;
+        else if(firstWheel == 3 && secondWheel == 3 && (thirdWheel == 3 || thirdWheel == 6))
+            _win = 10;
+        else if(firstWheel == 4 && secondWheel == 4 && (thirdWheel == 4 || thirdWheel == 6))
+            _win = 14;
+        else if(firstWheel == 5 && secondWheel == 5 && (thirdWheel == 5 || thirdWheel == 6))
+            _win = 20;
+        else if(firstWheel == 6 && secondWheel == 6 && thirdWheel == 6)
+            _win = 250;
+        
+        string memory firstSymbol = _getSymbols(firstWheel);
+        string memory secondSymbol = _getSymbols(secondWheel);
+        string memory thirdSymbol = _getSymbols(thirdWheel);
+        string memory _spinResult = string(abi.encodePacked(firstSymbol, ' ', secondSymbol, ' ', thirdSymbol));
+        return (_win, _spinResult);
+        
+    }
 }
