@@ -1,5 +1,9 @@
 # College Project 
-This is a Team Project made for the Blockchain course at UBB, Romania.
+​	This is a Team Project made for the Blockchain course at UBB, Romania.
+
+### **ERC-20 TOKEN STANDARD**
+
+​	The [ERC-20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/#top) introduces a standard for Fungible Tokens, in other words, they have a property that makes each Token be exactly the same (in type and value) of another Token. For example, an ERC-20 Token acts just like the ETH, meaning that 1 Token is and will always be equal to all the other Tokens.
 
 ## Gambling App: LuckyCasino
 
