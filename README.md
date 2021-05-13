@@ -30,7 +30,7 @@ This is a Solidity Project with a focus on gambling applications using Blockchai
 
   | Players                                                      | Manager                                                      |
   | ------------------------------------------------------------ | ------------------------------------------------------------ |
-  | <img src="C:\Users\Starrux\Documents\Lightshot\Screenshot_69.png" alt="Screenshot_69" style="zoom:33%;" /> | <img src="C:\Users\Starrux\Documents\Lightshot\Screenshot_72.png" alt="Screenshot_72" style="zoom:33%;" /> |
+  | <img src="https://github.com/dodoposa/proiect-blockchain/blob/main/Pictures/Lottery/Screenshot_69.png" alt="Screenshot_69" style="zoom:33%;" /> | <img src="https://github.com/dodoposa/proiect-blockchain/blob/main/Pictures/Lottery/Screenshot_72.png" alt="Screenshot_72" style="zoom:33%;" /> |
 
   
 
@@ -38,11 +38,11 @@ This is a Solidity Project with a focus on gambling applications using Blockchai
 
   ​	The winner is chosen randomly calling the random function keccak256 and take the modulo from the number of players.
 
-  ![Screenshot_70](C:\Users\Starrux\Documents\Lightshot\Screenshot_70.png)
+  ![Screenshot_70](https://github.com/dodoposa/proiect-blockchain/blob/main/Pictures/Lottery/Screenshot_70.png)
 
   ​	The entire idea is that you can deploy a new lottery contract, people start playing and they get added to the players dynamic array, the managers chooses the winner and then we empty the player list for the next round.
 
-  ![Screenshot_71](C:\Users\Starrux\Documents\Lightshot\Screenshot_71.png)
+  ![Screenshot_71](https://github.com/dodoposa/proiect-blockchain/blob/main/Pictures/Lottery/Screenshot_71.png)
 
   ​	
 
