@@ -7,7 +7,7 @@ contract Roulette {
     uint8[] numberRange = [1,2,2,1,1,36];
     mapping (address => uint256) winnings;
      /*
-    BetTypes are as follow:
+    BetTypes:
       0: color
       1: column
       2: dozen
@@ -15,7 +15,7 @@ contract Roulette {
       4: modulus
       5: number
 
-    Depending on the BetType, number will be:
+    Depending on the BetType, number should be:
       color: 0 for black, 1 for red
       column: 0 for left, 1 for middle, 2 for right
       dozen: 0 for first, 1 for second, 2 for third
@@ -31,20 +31,11 @@ contract Roulette {
   Bet[] public bets;
 
     function bet(uint8 number, uint8 betType) payable public {
-    /*
-       A bet is valid when:
-       1 - the value of the bet is correct (=betAmount)
-       2 - betType is known (between 0 and 5)
-       3 - the option betted is valid (don't bet on 37!)
-       4 - the bank has sufficient funds to pay the bet
-    */
-    //require(msg.value == betAmount);                               // 1
-    require(betType >= 0 && betType <= 5);                         // 2
-    require(number >= 0 && number <= numberRange[betType]);        // 3
+    require(betType >= 0 && betType <= 5); 
+    require(number >= 0 && number <= numberRange[betType]);
     uint payoutForThisBet = payouts[betType] * msg.value;
     uint provisionalBalance = necessaryBalance + payoutForThisBet;
-    require(provisionalBalance < address(this).balance);           // 4
-    /* we are good to go */
+    require(provisionalBalance < address(this).balance);
     necessaryBalance += payoutForThisBet;
     bets.push(Bet({
       betType: betType,
@@ -54,11 +45,8 @@ contract Roulette {
   }
 
   function spinWheel() public returns(uint){
-    /* are there any bets? */
     require(bets.length > 0);
-    /* calculate 'random' number */
     uint number = uint(keccak256(abi.encodePacked(now, msg.sender)))  % 37;
-    /* check every bet for this number */
     for (uint i = 0; i < bets.length; i++) {
       bool won = false;
       Bet memory b = bets[i];
@@ -97,16 +85,12 @@ contract Roulette {
           }
         }
       }
-      /* if winning bet, add to player winnings balance */
       if (won) {
         winnings[b.player] += betAmount * payouts[b.betType];
       }
     }
-    /* delete all bets */
     delete bets;
-    /* reset necessaryBalance */
     necessaryBalance = 0;
-    /* returns 'random' number to UI */
     return number;
   }
 
@@ -117,8 +101,8 @@ contract Roulette {
 
     function getStatus() public view returns(uint, uint, uint, uint) {
     return (
-      bets.length,             // number of active bets
-      bets.length * betAmount, // value of active bets
+      bets.length,             // number of bets
+      bets.length * betAmount, // value of bets
       address(this).balance,   // roulette balance
       winnings[msg.sender]     // winnings of player
     );
