@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 import './erc20.sol';
 import './SafeMath.sol';
@@ -13,6 +14,10 @@ contract LuckyCasino is ERC20, Ownable{
     string private _tokenName = "Lucky_Casino_Chips";
     uint private secret;
     /* This creates an array with all balances */
+    
+    address public manager;
+    address payable[] public players;
+    
     mapping (address => uint256) public _balanceOf;
 	
     mapping (address => mapping (address => uint256)) public _allowance;
@@ -23,6 +28,7 @@ contract LuckyCasino is ERC20, Ownable{
         _totalSupply=_total;
         _balanceOf[msg.sender] = _totalSupply;
         secret=0;
+        manager = msg.sender;
     }
 
 
@@ -333,5 +339,44 @@ contract LuckyCasino is ERC20, Ownable{
     necessaryBalance = 0;
     return number;
   }
+
+/*
+    Rhis is the Lottery part. More about how it works you can find on the readme section  on our github page.
+                      https://github.com/dodoposa/proiect-blockchain
+  */
+    function enter() public payable {
+        require(
+            msg.value > .01 ether,
+            "A minimum payment of .01 ether must be sent to enter the lottery"
+        );
+
+        players.push(msg.sender);
+    }
+
+    function random() private view returns (uint) {
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.number, players)));
+    }
+
+    function pickWinner() public onlyManager {
+        uint index = random() % players.length;
+        address contractAddress = address(this);
+        players[index].transfer(contractAddress.balance);
+        players = new address payable[](0);
+    }
+
+    function getPlayers() public view returns (address payable[] memory) {
+        return players;
+    }
+
+    modifier onlyManager() {
+        require(
+            msg.sender == manager,
+            "Only MANAGER can call this function."
+        );
+        _;
+    }
+    
+    
+    
     
 }
