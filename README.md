@@ -12,7 +12,7 @@ This is a Solidity Project with a focus on gambling applications using Blockchai
 | Gambling Type | Idea                                                         |
 | ------------- | ------------------------------------------------------------ |
 | Slot Machine  |                                                              |
-| Coin Flip     |                                                              |
+| Coin Flip     | Manage one players gamble with a coinflip                                                             |
 | Roulette      |                                                              |
 | Lottery       | Manager of the lottery and different players that gamble on a lottery pool |
 
@@ -22,7 +22,8 @@ This is a Solidity Project with a focus on gambling applications using Blockchai
 
 - ### Coin Flip
 
-  
+This game synergizes with the main casino contract. :D
+  As a user you can gamble a sum of money to the coinflip, predicting the outcome. It's either heads or tails with a possibility of 49.5% each, which would give you a profit of 2x. You can also  be extremely lucky and the coin lands on its side which will give you 99x profit. 
 
 - ### Roulette
 
