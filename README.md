@@ -11,13 +11,15 @@ This is a Solidity Project with a focus on gambling applications using Blockchai
 
 | Gambling Type | Idea                                                         |
 | ------------- | ------------------------------------------------------------ |
-| Slot Machine  |                                                              |
+| Slot Machine  | Slot Machine with three spin wheels, seven symbols and a steady cost of 2 LCC per spin.                                                             |
 | Coin Flip     | Manage one players gamble with a coinflip                                                             |
 | Roulette      |                                                              |
 | Lottery       | Manager of the lottery and different players that gamble on a lottery pool |
 
 - ### Slot Machine
-
+Slot Machine with three spin wheels, seven symbols and a steady cost of 2 LCC (Lucky Casino Coins) per spin.   
+There are several winning combinations, each with different corresponding sums. 
+The game is in the main casino.sol contract and uses the random generation function found in the same contract.
   
 
 - ### Coin Flip
