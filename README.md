@@ -28,7 +28,8 @@ This game synergizes with the main casino contract. :D
   As a user you can gamble a sum of money to the coinflip, predicting the outcome. It's either heads or tails with a possibility of 49.5% each, which would give you a profit of 2x. You can also  be extremely lucky and the coin lands on its side which will give you 99x profit. 
 
 - ### Roulette
-
+The roulette accepts bets from multiple participants at the same time. The bet types and options are listed in the roulette.sol contract comments. 
+One of the players should use the Spin Wheel function which will generate the next roulette number and all bets will be dealt with accordingly.  
   
 
 - ### Lottery
